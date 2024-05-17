@@ -1,41 +1,50 @@
 import java.awt.*;
-import java.util.*;
 
-public class Ball extends Rectangle{
-    Random random;
-    int xVelocity;
-    int yVelocity;
-    int initialSpeed = 2;
+public class Ball {
+    public static final int DIAMETER = 20;
+    private static final int SPEED = 6;
 
-    Ball(int x, int y, int width, int height){
-        super(x,y,width,height);
-        random = new Random();
-        int randomXDirection = random.nextInt(2);
-        if(randomXDirection == 0)
-            randomXDirection--;
-        setXDirection(randomXDirection*initialSpeed);
+    private int x, y;
+    private int xSpeed = SPEED;
+    private int ySpeed = SPEED;
 
-        int randomYDirection = random.nextInt(2);
-        if(randomYDirection == 0)
-            randomYDirection--;
-        setYDirection(randomYDirection*initialSpeed);
-    }
-
-    public void setXDirection(int randomXDirection) {
-        xVelocity = randomXDirection;
-    }
-
-    public void setYDirection(int randomYDirection) {
-        yVelocity = randomYDirection;
+    public Ball(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void move() {
-        x += xVelocity;
-        y += yVelocity;
+        x += xSpeed;
+        y += ySpeed;
+
+        if (y <= 0 || y >= GamePanel.getPanelHeight() - DIAMETER) {
+            ySpeed = -ySpeed;
+        }
+    }
+
+    public void reverseXSpeed() {
+        xSpeed = -xSpeed;
+    }
+
+    public void reset() {
+        x = GamePanel.getPanelWidth() / 2 - DIAMETER / 2;
+        y = GamePanel.getPanelHeight() / 2 - DIAMETER / 2;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, DIAMETER, DIAMETER);
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.white);
-        g.fillOval(x, y, height, width);
+        g.setColor(Color.WHITE);
+        g.fillOval(x, y, DIAMETER, DIAMETER);
     }
 }
