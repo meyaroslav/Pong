@@ -1,15 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements KeyListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
-
     private Ball ball;
     private Player player1, player2;
-    private Obstacle obstacle1, obstacle2;
-
+    private Obstacle[] obstacles = new Obstacle[5];
     private int scorePlayer1 = 0;
     private int scorePlayer2 = 0;
     private boolean gameRunning = true;
@@ -21,13 +20,21 @@ public class GamePanel extends JPanel implements KeyListener {
         ball = new Ball(WIDTH / 2 - Ball.DIAMETER / 2, HEIGHT / 2 - Ball.DIAMETER / 2);
         player1 = new Player(0, HEIGHT / 2 - Player.HEIGHT / 2, KeyEvent.VK_W, KeyEvent.VK_S);
         player2 = new Player(WIDTH - Player.WIDTH, HEIGHT / 2 - Player.HEIGHT / 2, KeyEvent.VK_UP, KeyEvent.VK_DOWN);
-        obstacle1 = new Obstacle(WIDTH / 4 - Obstacle.WIDTH / 2, HEIGHT / 2 - Obstacle.HEIGHT / 2);
-        obstacle2 = new Obstacle(3 * WIDTH / 4 - Obstacle.WIDTH / 2, HEIGHT / 2 - Obstacle.HEIGHT / 2);
 
+        createObstacles();
         Timer timer = new Timer(1000 / 60, e -> update());
         timer.start();
         addKeyListener(this);
         setFocusable(true);
+    }
+
+    private void createObstacles() {
+        Random rand = new Random();
+        for (int i = 0; i < obstacles.length; i++) {
+            int centerX = rand.nextInt(WIDTH / 2 - Obstacle.WIDTH) + WIDTH / 4;
+            int centerY = rand.nextInt(HEIGHT - Obstacle.HEIGHT);
+            obstacles[i] = new Obstacle(centerX, centerY);
+        }
     }
 
     public static int getPanelWidth() {
@@ -54,8 +61,10 @@ public class GamePanel extends JPanel implements KeyListener {
             ball.reverseXSpeed();
         }
 
-        if (ball.getBounds().intersects(obstacle1.getBounds()) || ball.getBounds().intersects(obstacle2.getBounds())) {
-            ball.reverseXSpeed();
+        for (Obstacle obstacle : obstacles) {
+            if (ball.getBounds().intersects(obstacle.getBounds())) {
+                ball.reverseXSpeed();
+            }
         }
     }
 
@@ -79,8 +88,9 @@ public class GamePanel extends JPanel implements KeyListener {
         ball.draw(g);
         player1.draw(g);
         player2.draw(g);
-        obstacle1.draw(g);
-        obstacle2.draw(g);
+        for (Obstacle obstacle : obstacles) {
+            obstacle.draw(g);
+        }
         drawScore(g);
         if (!gameRunning) {
             drawGameOver(g);
