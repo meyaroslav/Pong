@@ -5,7 +5,6 @@ public class Player {
     public static final int WIDTH = 10;
     public static final int HEIGHT = 100;
     private static final int SPEED = 10;
-
     private int x, y;
     private int upKey, downKey;
     private boolean up = false, down = false;

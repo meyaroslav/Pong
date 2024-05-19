@@ -1,4 +1,5 @@
 import java.awt.*;
+import javax.swing.ImageIcon;
 
 public class Ball {
     public static final int DIAMETER = 20;
@@ -7,10 +8,17 @@ public class Ball {
     private int x, y;
     private int xSpeed = SPEED;
     private int ySpeed = SPEED;
+    private Image image;
 
     public Ball(int x, int y) {
         this.x = x;
         this.y = y;
+        loadImage();
+    }
+
+    private void loadImage() {
+        ImageIcon ii = new ImageIcon("src/image/ball.png");
+        image = ii.getImage();
     }
 
     public void move() {
@@ -44,7 +52,6 @@ public class Ball {
     }
 
     public void draw(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.fillOval(x, y, DIAMETER, DIAMETER);
+        g.drawImage(image, x, y, DIAMETER, DIAMETER, null);
     }
 }

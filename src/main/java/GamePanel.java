@@ -12,9 +12,11 @@ public class GamePanel extends JPanel implements KeyListener {
     private int scorePlayer1 = 0;
     private int scorePlayer2 = 0;
     private boolean gameRunning = true;
+    private Image backgroundImage;
 
     public GamePanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        loadImage();
         setBackground(Color.BLACK);
 
         ball = new Ball(WIDTH / 2 - Ball.DIAMETER / 2, HEIGHT / 2 - Ball.DIAMETER / 2);
@@ -26,6 +28,11 @@ public class GamePanel extends JPanel implements KeyListener {
         timer.start();
         addKeyListener(this);
         setFocusable(true);
+    }
+
+    private void loadImage() {
+        ImageIcon ii = new ImageIcon("src/image/field.png");
+        backgroundImage = ii.getImage();
     }
 
     private void createObstacles() {
@@ -85,6 +92,7 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawBackground(g);
         ball.draw(g);
         player1.draw(g);
         player2.draw(g);
@@ -95,6 +103,10 @@ public class GamePanel extends JPanel implements KeyListener {
         if (!gameRunning) {
             drawGameOver(g);
         }
+    }
+
+    private void drawBackground(Graphics g) {
+        g.drawImage(backgroundImage, 0, 0, WIDTH, HEIGHT, null);
     }
 
     private void drawScore(Graphics g) {
